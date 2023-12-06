@@ -79,7 +79,7 @@ public class YangDataDocumentJsonCodec implements YangDataDocumentCodec<JsonNode
             return null;
         }
 
-        YangDataDocument yangDataDocument = new YangDataDocumentImpl(null, yangSchemaContext);
+        YangDataDocument yangDataDocument = new YangDataDocumentImpl(null, yangSchemaContext, element.toString());
 
         validatorResultBuilder.merge(JsonCodecUtil.buildChildrenData(yangDataDocument, element));
         return yangDataDocument;
