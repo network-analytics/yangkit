@@ -33,29 +33,27 @@ public class YangStringImpl extends RestrictionImpl<String> implements YangStrin
    }
 
    public boolean evaluated(String value) {
-      if (this.patterns.size() > 0) {
-         Iterator patternIterator = this.patterns.iterator();
+      if (!this.patterns.isEmpty()) {
 
-         while(patternIterator.hasNext()) {
-            Pattern pattern = (Pattern)patternIterator.next();
-            if (pattern.getModifier() != null) {
-               if (!pattern.getPattern().matcher(value).matches()) {
-                  return true;
-               }
-            } else if (pattern.getPattern().matcher(value).matches()) {
-               return true;
-            }
-         }
+          for (Pattern pattern : this.patterns) {
+              if (pattern.getModifier() != null) {
+                  if (pattern.getPattern().matcher(value).matches()) {
+                      return false;
+                  }
+              } else if (!pattern.getPattern().matcher(value).matches()) {
+                  return false;
+              }
+          }
 
-         return false;
-      } else if (this.getLength() != null) {
-         return this.length.evaluate(BigInteger.valueOf((long) value.length()));
-      } else if (this.getDerived() != null) {
-         return this.getDerived().getType().getRestriction().evaluated(value);
-      } else {
-         Section section = new Section(this.getHighBound(), this.getLowBound());
-         return section.evaluate(BigInteger.valueOf((long) value.length()));
       }
+      if (this.getLength() != null) {
+         return this.length.evaluate(BigInteger.valueOf((long) value.length()));
+      }
+      if (this.getDerived() != null) {
+         return this.getDerived().getType().getRestriction().evaluated(value);
+      }
+      Section section = new Section(this.getHighBound(), this.getLowBound());
+      return section.evaluate(BigInteger.valueOf((long) value.length()));
    }
 
    public Length getLength() {
