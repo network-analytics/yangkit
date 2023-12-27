@@ -261,6 +261,7 @@ public class JsonCodecUtil {
                 }
                 break;
             case "string":
+            case "enumeration":
                 if(!child.isTextual()){
                     validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
                 }else if(!leaf.getType().getRestriction().evaluated(child.asText())){
