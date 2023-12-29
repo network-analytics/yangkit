@@ -20,6 +20,7 @@ import org.yangcentral.yangkit.data.api.model.YangDataDocument;
 import org.yangcentral.yangkit.data.api.model.YangDataEntity;
 import org.yangcentral.yangkit.data.api.operation.YangDataOperator;
 import org.yangcentral.yangkit.data.impl.operation.YangDataOperatorImpl;
+import org.yangcentral.yangkit.model.api.restriction.Empty;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
 import org.yangcentral.yangkit.model.api.stmt.*;
 import org.yangcentral.yangkit.model.api.stmt.Module;
@@ -234,210 +235,20 @@ public class JsonCodecUtil {
     }
 
  */
-    public static ValidatorRecordBuilder<String, JsonNode> getTypeErrorRecord(JsonNode child, String expectedType){
-        ValidatorRecordBuilder<String, JsonNode> recordBuilder = new ValidatorRecordBuilder<>();
-        recordBuilder.setErrorTag(ErrorTag.BAD_ELEMENT);
-        recordBuilder.setErrorPath(JsonCodecUtil.getJsonPath(child));
-        recordBuilder.setBadElement(child);
-        recordBuilder.setErrorMessage(new ErrorMessage("bad element:" + child.toString() + " does not match type " + expectedType ));
-        return recordBuilder;
-    }
 
-    public static ValidatorRecordBuilder<String, JsonNode> getRestrictionErrorRecord(JsonNode child, String restriction){
-        ValidatorRecordBuilder<String, JsonNode> recordBuilder = new ValidatorRecordBuilder<>();
-        recordBuilder.setErrorTag(ErrorTag.BAD_ELEMENT);
-        recordBuilder.setErrorPath(JsonCodecUtil.getJsonPath(child));
-        recordBuilder.setBadElement(child);
-        recordBuilder.setErrorMessage(new ErrorMessage("bad element:" + child.toString() + " does not respect restriction : " + restriction ));
-        return recordBuilder;
-    }
-    public static ValidatorResult checkLeaf(JsonNode child, Leaf leaf){
-        ValidatorResultBuilder validatorResultBuilder = new ValidatorResultBuilder();
-        String builtinType = leaf.getType().getBuiltinType().getArgStr().toLowerCase();
-        switch (builtinType){
-            case "boolean":
-                if(!child.isBoolean()){
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                }
-                break;
-            case "string":
-            case "enumeration":
-                if(!child.isTextual()){
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                }else if(!leaf.getType().getRestriction().evaluated(child.asText())){
-                    validatorResultBuilder.addRecord(getRestrictionErrorRecord(child, leaf.getType().getRestriction().toString()).build());
-                }
-                break;
-            case "int8":
-                byte convertedB;
-                if(!child.isNumber()){
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                try{
-                    convertedB = Byte.parseByte(child.asText());
-                }catch (NumberFormatException e) {
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                if(!leaf.getType().getRestriction().evaluated(convertedB)){
-                    validatorResultBuilder.addRecord(getRestrictionErrorRecord(child, leaf.getType().getRestriction().toString()).build());
-                }
-                break;
-
-            case "int16":
-                short convertedS;
-                if(!child.isNumber()){
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                try{
-                    convertedS = Short.parseShort(child.asText());
-                }catch (NumberFormatException e) {
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                if(!leaf.getType().getRestriction().evaluated(convertedS)){
-                    validatorResultBuilder.addRecord(getRestrictionErrorRecord(child, leaf.getType().getRestriction().toString()).build());
-                }
-                break;
-
-            case "int32":
-                int convertedI;
-                if(!child.isNumber()){
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                try{
-                    convertedI = Integer.parseInt(child.asText());
-                }catch (NumberFormatException e) {
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                if(!leaf.getType().getRestriction().evaluated(convertedI)){
-                    validatorResultBuilder.addRecord(getRestrictionErrorRecord(child, leaf.getType().getRestriction().toString()).build());
-                }
-                break;
-
-            case "int64":
-                long convertedL;
-                if(!child.isTextual()){
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                try{
-                    convertedL = Long.parseLong(child.asText());
-                }catch (NumberFormatException e) {
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                if(!leaf.getType().getRestriction().evaluated(convertedL)){
-                    validatorResultBuilder.addRecord(getRestrictionErrorRecord(child, leaf.getType().getRestriction().toString()).build());
-                }
-                break;
-
-            case "uint8":
-                short convertedUS;
-                if(!child.isNumber() && !child.asText().startsWith("-")){
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                try{
-                    convertedUS = Short.parseShort(child.asText());
-                }catch (NumberFormatException e) {
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                if(!leaf.getType().getRestriction().evaluated(convertedUS)){
-                    validatorResultBuilder.addRecord(getRestrictionErrorRecord(child, leaf.getType().getRestriction().toString()).build());
-                }
-                break;
-
-            case "uint16":
-                int convertedUI;
-                if(!child.isNumber()){
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                try{
-                    convertedUI = Integer.parseUnsignedInt(child.asText());
-                }catch (NumberFormatException e) {
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                if(!leaf.getType().getRestriction().evaluated(convertedUI)){
-                    validatorResultBuilder.addRecord(getRestrictionErrorRecord(child, leaf.getType().getRestriction().toString()).build());
-                }
-                break;
-
-            case "uint32":
-                long convertedUL;
-                if(!child.isNumber()){
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                try{
-                    convertedUL = Long.parseUnsignedLong(child.asText());
-                }catch (NumberFormatException e) {
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                if(!leaf.getType().getRestriction().evaluated(convertedUL)){
-                    validatorResultBuilder.addRecord(getRestrictionErrorRecord(child, leaf.getType().getRestriction().toString()).build());
-                }
-                break;
-
-            case "uint64":
-                BigInteger convertedU64;
-                if(!child.isTextual()){
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                try{
-                    convertedU64 = new BigInteger(child.asText());
-                }catch (NumberFormatException e) {
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                if(!leaf.getType().getRestriction().evaluated(convertedU64)){
-                    validatorResultBuilder.addRecord(getRestrictionErrorRecord(child, leaf.getType().getRestriction().toString()).build());
-                }
-                break;
-
-            case "decimal64":
-                BigDecimal convertedDec;
-                if(!child.isTextual()){
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                try{
-                    convertedDec = new BigDecimal(child.asText());
-                }catch (NumberFormatException e) {
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                    break;
-                }
-                if(!leaf.getType().getRestriction().evaluated(convertedDec)){
-                    validatorResultBuilder.addRecord(getRestrictionErrorRecord(child, leaf.getType().getRestriction().toString()).build());
-                }
-                break;
-            case "binary":
-                if(!child.isTextual()){
-                    validatorResultBuilder.addRecord(getTypeErrorRecord(child, builtinType).build());
-                }else if(!leaf.getType().getRestriction().evaluated(child.asText().getBytes())){
-                    validatorResultBuilder.addRecord(getRestrictionErrorRecord(child, leaf.getType().getRestriction().toString()).build());
-                }
-                break;
-        }
-        return validatorResultBuilder.build();
-    }
     public static ValidatorResult buildChildData(YangDataContainer yangDataContainer, JsonNode child, SchemaNode childSchemaNode){
         ValidatorResultBuilder validatorResultBuilder = new ValidatorResultBuilder();
 
-        if(childSchemaNode instanceof Leaf){
-            Leaf leaf = (Leaf) childSchemaNode;
-            validatorResultBuilder.merge(checkLeaf(child, leaf));
+        boolean doArrayValidation = true;
+        if(childSchemaNode instanceof Container){
+            doArrayValidation = false;
         }
-        else if(child.isArray()) {
+        else if(childSchemaNode instanceof Leaf){
+            Leaf leaf = (Leaf)childSchemaNode;
+            doArrayValidation = leaf.getType() instanceof Empty;
+        }
+
+        if(child.isArray() && doArrayValidation) {
             if((childSchemaNode instanceof YangList) || (childSchemaNode instanceof LeafList)) {
                 int size = child.size();
                 for (int i =0;i < size;i++) {
