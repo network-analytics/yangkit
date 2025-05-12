@@ -27,12 +27,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.github.yang-central.yangkit</groupId>
+            <groupId>com.github.yang-central</groupId>
             <artifactId>yangkit-common</artifactId>
             <version>${io.github.yang-central.yangkit.yangkit-common.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.yang-central.yangkit</groupId>
+            <groupId>com.github.yang-central</groupId>
             <artifactId>yangkit-common-utils</artifactId>
             <version>${io.github.yang-central.yangkit.yangkit-common-utils.version}</version>
         </dependency>
