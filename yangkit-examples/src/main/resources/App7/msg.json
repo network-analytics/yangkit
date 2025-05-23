@@ -1,6 +1,13 @@
 {
-  "insa-test-dependence:insa-container2": {
-    "computer2": "computer",
-    "router2": 234
+  "data": {
+    "insa-test-dependence:insa-container2": {
+      "computer2": "holaaaa",
+      "router2": 234,
+      "payload": {
+        "insa-test:insa-container": {
+          "router": 234
+        }
+      }
+    }
   }
 }

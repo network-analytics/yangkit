@@ -58,9 +58,9 @@ public class App7 {
         doc.update();
         ValidatorResult validatorResult = validatorResultBuilder.build();
         System.out.println("Is JSON valid? " + validatorResult.isOk());
-        for (ValidatorRecord<?, ?> record : validatorResult.getRecords()) {
-            System.out.println(record.getSeverity() + ":" + record.getErrorMsg().getMessage() + " - " + record.getBadElement());
-        }
+//        for (ValidatorRecord<?, ?> record : validatorResult.getRecords()) {
+//            System.out.println(record.getSeverity() + ":" + record.getErrorMsg().getMessage() + " - " + record.getBadElement());
+//        }
 
         ValidatorResult validatorResult1 = doc.validate();
         System.out.println("Is JSON valid? " + validatorResult1.isOk());

@@ -1,5 +1,4 @@
 {
-  "data": {
     "ietf-telemetry-message:message": {
       "timestamp": "2024-02-14T12:10:10.12+01:00",
       "session-protocol": "yp-push",
@@ -44,21 +43,19 @@
         ]
       },
       "payload": {
-        "data": {
           "ietf-yang-push:push-update": {
             "id": 89,
             "datastore-contents": {
-              "data": {
               "ietf-interfaces:interfaces": {
                 "interface": [{
                   "name": "eth0",
                   "type": "iana-if-type:ethernetCsmacd",
                   "oper-status": "up"
                 }]
-              }
-            }}
+
+            }
           }
-        }
+
       }
     }
   }
