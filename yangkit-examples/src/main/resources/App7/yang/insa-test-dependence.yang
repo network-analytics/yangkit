@@ -17,20 +17,10 @@ module insa-test-dependence {
     description "Initial version.";
   }
 
-  container insa-container2 {
-    config false;
-    leaf computer2 {
-        type string;
-        mandatory true;
-        description "computer";
+    augment "/ity:insa-container" {
+        leaf addrewsssss {
+            type string;
+            description "address";
+        }
     }
-    leaf router2 {
-        type uint8;
-        description "router";
-    }
-    anydata payload {
-        description
-            "Message or notification received from network element.";
-    }
-  }
 }

@@ -55,9 +55,7 @@ module ietf-subscribed-notifications {
      Author:  Ambika Prasad Tripathy
               <mailto:ambtripa@cisco.com>";
   description
-    "This module fixes Errata https://www.rfc-editor.org/errata/eid8427.
-
-     This module defines a YANG data model for subscribing to event
+    "This module defines a YANG data model for subscribing to event
      records and receiving matching content in notification messages.
 
      The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
@@ -590,7 +588,6 @@ module ietf-subscribed-notifications {
         description
           "Adds additional objects that can be modified by an RPC.";
         leaf stream {
-          when "/sn:streams/sn:stream";
           type stream-ref {
             require-instance false;
           }

@@ -23,4 +23,12 @@ module insa-test {
       description "router";
     }
   }
+
+  augment "/ity:insa-container" {
+    leaf address {
+      type string;
+      mandatory true;
+      description "address";
+    }
+  }
 }
