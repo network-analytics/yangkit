@@ -1,0 +1,7 @@
+{
+  "example-features:system": {
+    "advanced": {
+      "debug-level": "debug"
+    }
+  }
+}

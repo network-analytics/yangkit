@@ -1,0 +1,13 @@
+{
+    "example-features:system": {
+        "advanced": {
+            "debug-level": "debug"
+        },
+        "statistics": {
+            "uptime": 86400
+        },
+        "complex-settings": {
+            "setting-a": "value1"
+        }
+    }
+}
